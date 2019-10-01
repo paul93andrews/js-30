@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoped CSS Variables and JS</title>
+</head>
+<body>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+
+  <div class="controls">
+    <!-- data attributes on each input ensure that the value taken from the change listener is then converted in to pixels for use -->
+    <label for="spacing">Spacing:</label>
+    <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+
+    <label for="blur">Blur:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+
+    <label for="base">Base Color</label>
+    <input id="base" type="color" name="base" value="#ffc600">
+  </div>
+
+  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+
+  <style>
+
+    /*
+      misc styles, nothing to do with CSS variables
+    */
+    /* 1. create the CSS variables so that they can be updated and then change the elements they're applied to */
+    :root {
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
+
+    body {
+      text-align: center;
+      background: #193549;
+      color: white;
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 50px;
+    }
+
+    .controls {
+      margin-bottom: 50px;
+    }
+
+    input {
+      width: 100px;
+    }
+  </style>
+
+  <script>
+    //1. select all inputs on the page and use their values on change to update the css variable
+    const inputs = document.querySelectorAll('.controls input');
+
+    //2. develop a function that takes an event on the DOM and changes the styling to it based on the DOM element's name and changed value
+    handleUpdate = (event) => {
+      //the variable below combines the current target's value with the suffix from the data-key on the element, this case pixels
+      const suffix = event.currentTarget.dataset.sizing || '';
+
+      //the expressionbelow gets the event element's styles and then sets the property using the event.target.name matched to the CSS variable name and then adjusting the value given the property's value and adding the suffix to it so that CSS can read it as either pixel or hex code
+      document.documentElement.style.setProperty(`--${event.currentTarget.name}`, event.currentTarget.value + suffix);
+    }
+
+    //3. develop a forEach that goes through the node returned to us from the querySelectorAll and listens for when the value changes or user mouses over changes. It runs the function above to make the stylistic changes to the DOM via updating the CSS variables that are applied to it.
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+
+
+  </script>
+
+</body>
+</html>
