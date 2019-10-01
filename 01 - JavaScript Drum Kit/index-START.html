@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script>
+//1. create a function that play the sound depending on which key is pressed and connect that key value to the audio that will play when its pressed
+  playSound = (event) => {
+    //2. next we want to select the audio element with the data-key that matches the key we pressed on the keyboard
+    const audio = document.querySelector(`audio[data-key="${event.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${event.keyCode}"]`);
+
+    if (audio != null && key != null) {
+      //3. this will play the sound of the audio button we've pressed, ensuring that it's rewinded to the sound's start each time and allowing for repeated presses
+      audio.currentTime = 0;
+      audio.play();
+      key.classList.add('playing');
+    }
+  }  
+
+  removeTransition = (event) => {
+    //4. this ensures that the transition is reversed upon it finishing
+    if (event.propertyName !== 'transform') return;
+    //the expression below takes the key that has been pressed (this) and removes the transition class
+    event.currentTarget.classList.remove('playing');
+  }
+
+  //5.listen for when event on keys is finished and then reset the styles
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+  //6. event listener includes the play sound function that will be triggered when the key is pressed, taking the keyCode of the key pressed and pass it through the function as the event
+  window.addEventListener('keydown', playSound);
+</script>
+
+</body>
+</html>
