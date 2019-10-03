@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+
+<script>
+  //select the canvas from the DOM
+  const canvas = document.querySelector('#draw');
+  //ctx will be our binding for a 2d canvas
+  const ctx = canvas.getContext('2d');
+  //set the size of the canvas on the DOM to ensure it takes up the entire brower's size
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  //styles specific to the canvas 2d, ensuring the coloured line is rounded and the width of it is a constant
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 100;
+
+//the following creates a sort of flag that tracks when someone is clicked on the screen and drawing versus just moving their mouse around.
+  let isDrawing = false;
+//this tracks where the mouse click will start the line drawing from and where it will end it
+  let lastX = 0;
+  let lastY = 0;
+  //hue will be the dynamic value in the hsl colour we used to style the colour line
+  let hue = 0;
+  // direction is the variable that will dynamically change depending on how high hue goes, that is, what the colour the line on the page is
+  let direction = true;
+
+  const draw = event => {
+    if (!isDrawing) return;
+    console.log(event);
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(event.offsetX, event.offsetY);
+    ctx.stroke();
+    //need to update the lastX and lastY values to reflect where they were on the page last
+    [lastX, lastY] = [event.offsetX, event.offsetY];
+
+    //increment the hue every time an event calling draw is active, and if hue reaches a point where it's too high, then reset from the beginning
+    hue++;
+    if(hue >= 360) {
+      hue = 0;
+    }
+
+    //change direction based on line width, never allowing line width to exceed 100px and go lower than 1px
+    if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1){
+      direction = !direction
+    }
+    //and have line width change based on direction, incrementing either smaller or lower depending on what the direction is, which is itself dependant on how large the lineWidth is
+    if(direction) {
+      ctx.lineWidth++;
+    } else {
+      ctx.lineWidth--;
+    }
+  }
+  //any time we move our mouse on the canvas, which takes up entire browser screen size, draw is our callback function which will run
+  canvas.addEventListener('mousemove', draw);
+  //when mouse is down we run our draw function, as it enables mousemove event listener as well. This event listener makes it more specific to movement fires draw function ONLY when mouse is down
+  canvas.addEventListener('mousedown', () => {
+    isDrawing = true;
+    [lastX, lastY] = [event.offsetX, event.offsetY]
+  });
+  //when mouse is no longer pressed in or leaves the browser screen then draw function will no longer run
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>

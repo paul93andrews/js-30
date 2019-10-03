@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Array Cardio 💪💪</title>
+</head>
+<body>
+  <p><em>Psst: have a look at the JavaScript Console</em> 💁</p>
+  <script>
+    // ## Array Cardio Day 2
+
+    const people = [
+      { name: 'Wes', year: 1988 },
+      { name: 'Kait', year: 1986 },
+      { name: 'Irv', year: 1970 },
+      { name: 'Lux', year: 2015 }
+    ];
+
+    const comments = [
+      { text: 'Love this!', id: 523423 },
+      { text: 'Super good', id: 823423 },
+      { text: 'You are the best', id: 2039842 },
+      { text: 'Ramen is my fav food ever', id: 123523 },
+      { text: 'Nice Nice Nice!', id: 542328 }
+    ];
+
+    // Some and Every Checks
+    // Array.prototype.some() // is at least one person 19 or older?
+    const isAdult = people.some(person => {
+      //this method checks to see if the condition that we're declaring in our return is true at any point in the array
+      const currentYear = (new Date()).getFullYear();
+      return currentYear - person.year >= 19;
+    });
+
+    console.log(isAdult); //true
+
+    // Array.prototype.every() // is everyone 19 or older?
+    const adultMajority = people.every(person => {
+      //this method checks to see if the condition that we're declaring in our return is true unanimously throughout the array
+      const currentYear = (new Date()).getFullYear();
+      return currentYear - person.year >= 19; 
+    });
+
+    console.log(adultMajority); //false
+
+    // Array.prototype.find()
+    // Find is like filter, but instead returns just the one you are looking for
+    // find the comment with the ID of 823423
+    const findSpecificComment = comments.find(comment => {
+      // a longer, more verbose way of finding the index number, find searches the array's properties to return the value that meets the condition set
+      if (comment.id == 823423) {
+        return comment.text;
+      };
+    });
+
+    //OR
+
+    const findCommentSpecific = comments.find(comment => {
+      //same thing is happening here but in much more concise syntax, returning the object to us that contains the id number we passed in
+      return comment.id == 823423;
+    })
+
+    console.log(findSpecificComment); // object at index number 1
+    console.log(findCommentSpecific); // object at index number 1
+
+    // Array.prototype.findIndex()
+    // Find the comment with this ID
+    // delete the comment with the ID of 823423
+    const findComment = comments.findIndex(comment => {
+      //method here will return the index number that meets the condition declared in the function's return. In this case, it is looking for the index number in the array that contains a property (therefore the value at this index number is a object or an array) equal to the id number we're searching for
+      return comment.id == 823423;
+    });
+
+    const removeComment = comments.splice(findComment, 1);
+
+    console.log(findComment); //1
+    console.log(comments); //returns original comments array without the object property we found in findComment
+
+    //OR - you have to comment out the removeComment declaration for the expressions below to work
+
+    const newComments = [
+      //using spread operator to separate the values into the newComments array, creates a copy of the comments array by removing and adding everything before the property at index findComment...
+      ...comments.slice(0, findComment),
+      //...removing and adding anything after the property at index findComment
+      ...comments.slice(findComment + 1)
+      //therefore we get an array back that includes only the property value that we want
+    ]
+
+    console.log(newComments); //returns new array without the object found in findComment
+    console.log(comments); //returns the same comments array, unmodified by slice
+
+  </script>
+</body>
+</html>
