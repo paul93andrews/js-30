@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+</head>
+<body>
+<script>
+  const pressed = [];
+  const secretCode = 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightbaEnter';
+  const length = 11; //hard coded length of number of key presses for entering konami code
+
+  window.addEventListener('keyup', (event) => {
+    pressed.push(event.key);
+    pressed.splice(-length - 1, pressed.length - length);
+    if(pressed.join('').includes(secretCode)) {
+      alert('WOAH KONAMI!');
+    }
+    console.log(pressed);
+  });
+
+</script>
+</body>
+</html>
