@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mouse Shadow</title>
+</head>
+<body>
+
+  <div class="hero">
+    <h1 contenteditable>🔥WOAH!</h1>
+  </div>
+
+  <style>
+  html {
+    color: black;
+    font-family: sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+  }
+
+  h1 {
+    text-shadow: 10px 10px 0 rgba(0,0,0,1);
+    font-size: 100px;
+  }
+  </style>
+
+<script>
+  const hero = document.querySelector('.hero');
+  const text = document.querySelector('h1');
+  const walk = 100; //100px
+
+  shadow = (event) => {
+    //we get the positioning of the hero element we've grabbed from the DOM
+    const {offsetWidth: width, offsetHeight: height} = hero;
+    //we get the position of the event on the DOM, this event being mousemove so it adjusts frequently
+    let {offsetX: x, offsetY: y} = event;
+
+    if (event.currentTarget != event.target) {
+      //interesting expression here, if the hero element is not the same as the event we're hovering over (that is, if we are grabbing the element we're listening to but hovering over a different, perhaps child element) then run this change...
+      //it adjusts the positioning to include the event target's width and height to the total calculation of the mouse's positioning on the page. The problem before was the event.target would give us different calculations of positioning WITHIN that element and not mouse's position on the entire DOM.
+      x = x + event.target.offsetLeft;
+      y = y + event.target.offsetTop;
+    }
+
+    //some calculations here to pass the mouse's position on the page as a value that makes sense for adjusting the element's text shadow. We couldn't pass in the x and y positioning values directly as they would be too large for the text-shadow to display appropriately
+    const xWalk = (x / width * walk - (walk / 2));
+    const yWalk = (y / height * walk - (walk / 2));
+
+    text.style.textShadow = `
+      ${xWalk}px ${yWalk}px 0 rgba(255, 0, 255, 0.7),
+      ${xWalk * -1}px ${yWalk}px 0 rgba(0, 255, 255, 0.7),
+      ${yWalk * -1}px ${xWalk}px 0 rgba(0, 255, 255, 0.7),
+      ${yWalk}px ${xWalk * -1}px 0 rgba(255, 0, 255, 0.7),
+      ${yWalk}px ${xWalk}px 0 rgba(255, 0, 255, 0.7)
+      `;
+    }
+
+  hero.addEventListener('mousemove', shadow);
+</script>
+</body>
+</html>
