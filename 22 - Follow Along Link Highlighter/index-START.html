@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>👀👀👀Follow Along Nav</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+      <ul class="menu">
+        <li><a href="">Home</a></li>
+        <li><a href="">Order Status</a></li>
+        <li><a href="">Tweets</a></li>
+        <li><a href="">Read Our History</a></li>
+        <li><a href="">Contact Us</a></li>
+      </ul>
+    </nav>
+
+    <div class="wrapper">
+      <p>Lorem ipsum dolor sit amet, <a href="">consectetur</a> adipisicing elit. Est <a href="">explicabo</a> unde natus necessitatibus esse obcaecati distinctio, aut itaque, qui vitae!</p>
+      <p>Aspernatur sapiente quae sint <a href="">soluta</a> modi, atque praesentium laborum pariatur earum <a href="">quaerat</a> cupiditate consequuntur facilis ullam dignissimos, aperiam quam veniam.</p>
+      <p>Cum ipsam quod, incidunt sit ex <a href="">tempore</a> placeat maxime <a href="">corrupti</a> possimus <a href="">veritatis</a> ipsum fugit recusandae est doloremque? Hic, <a href="">quibusdam</a>, nulla.</p>
+      <p>Esse quibusdam, ad, ducimus cupiditate <a href="">nulla</a>, quae magni odit <a href="">totam</a> ut consequatur eveniet sunt quam provident sapiente dicta neque quod.</p>
+      <p>Aliquam <a href="">dicta</a> sequi culpa fugiat <a href="">consequuntur</a> pariatur optio ad minima, maxime <a href="">odio</a>, distinctio magni impedit tempore enim repellendus <a href="">repudiandae</a> quas!</p>
+    </div>
+
+  <script>
+    const triggers = document.querySelectorAll('a');
+    const highlight = document.createElement('span');
+    //give the span element we've created a class and append it to the dom
+    highlight.classList.add('highlight');
+    document.body.append(highlight);
+
+    hightlightLink = (event) => {
+      //grab our link's coordinates by using getBoundingClientRec();
+      //getBoundingClientRec(); gives us how far along x and y axis the element is on the DOM in a number value that can be easily converted to pxs
+      const linkCords = event.currentTarget.getBoundingClientRect();
+      const cords = {
+        //setting our own property values for the coordinates of our links
+        width: linkCords.width,
+        height: linkCords.height,
+        //these are different because it adjusts the positioning of our span by taking the top and left position of our element and adding how much has been scrolled on page
+        //fixes a bug where the coordinates didn't adjust if page was scrolled
+        top: linkCords.top + window.scrollY,
+        left: linkCords.left + window.scrollX
+      }
+      //set the size and coordinates of our span element (hover effect)
+      highlight.style.width = `${cords.width}px`;
+      highlight.style.height = `${cords.height}px`;
+      //use transform property for more accurate and responsive positioning
+      highlight.style.transform = `translate(${cords.left}px, ${cords.top}px)`;
+    }
+
+    //loop through each of our triggers elements and attached the event listener to them
+    triggers.forEach(a => a.addEventListener('mouseenter', hightlightLink));
+  </script>
+</body>
+</html>
+
