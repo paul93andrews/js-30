@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+</head>
+<body class="bod">
+
+  <div class="one">
+    <div class="two">
+      <div class="three">
+      </div>
+    </div>
+  </div>
+
+<style>
+  html {
+    box-sizing: border-box;
+  }
+  
+  *, *:before, *:after { 
+    box-sizing: inherit; 
+  }
+
+  div {
+    width: 100%;
+    padding: 100px;
+  }
+
+  .one {
+    background: thistle;
+  }
+
+  .two {
+    background: mistyrose;
+  }
+
+  .three {
+    background: coral;
+  }
+</style>
+
+<button>Click Me!</button>
+<script>
+  const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
+
+
+  logText = (event) => {
+    console.log(event.currentTarget.classList.value);
+    //without the method call below we get event bubbling. 
+    //click events flow downward from the eldest parent to the event where the click took place
+    //the function then works it way back up calling the function on click event at every parent element
+    //this is called propagation and the method below prevents it from happening, focusing only on the event that was clicked
+    event.stopPropagation();
+  }
+
+  buttonClicked = () => {
+    console.log('clicked!');
+    button.innerHTML = `Click only works once`;
+  }
+
+  divs.forEach(div => div.addEventListener('click', logText));
+  button.addEventListener('click', buttonClicked, {
+    //this is a very useful property
+    //by declaring once equal to true, you enable the button to fire the callback function only once
+    once: true
+  })
+
+
+</script>
+</body>
+</html>
