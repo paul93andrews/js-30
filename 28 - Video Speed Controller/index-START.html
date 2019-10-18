@@ -18,22 +18,69 @@
   const speed = document.querySelector('.speed');
   const bar = speed.querySelector('.speed-bar');
   const video = document.querySelector('.flex');
+  let isDown = false;
 
-  const mouseOverMove = (event) => {
+  // const mouseOverMove = (event) => {
+  //   const y = event.pageY - event.currentTarget.offsetTop;
+  //   const percent = y / event.currentTarget.offsetHeight;
+  //   const min = 0.4;
+  //   const max = 4;
+  //   const height = Math.round(percent * 100) + '%';
+  //   const playbackRate = percent * (max - min) + min;
+
+  //   bar.style.height = height;
+  //   bar.textContent = playbackRate.toFixed(2) + 'x';
+
+  //   video.playbackRate = playbackRate;
+  // }
+
+  // speed.addEventListener('mousemove', mouseOverMove);
+
+
+  //another method below that I coded on my own
+
+  //it changes the ui of the speed control bar
+  const changeSpeedBar = (event) => {
+    //same code as when the effect is to change video speed on mouseover
     const y = event.pageY - event.currentTarget.offsetTop;
     const percent = y / event.currentTarget.offsetHeight;
     const min = 0.4;
     const max = 4;
     const height = Math.round(percent * 100) + '%';
-    const playbackRate = percent * (max - min) + min;
+    // difference begins here 
+    let playbackRate = percent * (max - min) + min;
+    //set the minimum and maxmium playback rate to what we want the min and max speeds to be
+    playbackRate = playbackRate < `${min}` ? playbackRate = `${min}` : playbackRate;
+    playbackRate = playbackRate > `${max}` ? playbackRate = `${max}` : playbackRate;
 
+    //reflect the display of the speed bar by the height of the area dragged
+    //hard code a max height so that playback rate doesn't go off the charts and affect display as well
     bar.style.height = height;
+    bar.style.maxHeight = '100%';
     bar.textContent = playbackRate.toFixed(2) + 'x';
 
     video.playbackRate = playbackRate;
   }
 
-  speed.addEventListener('mousemove', mouseOverMove);
+  const grab = (event) => {
+    //need the isDown variable to tell browser when mouse is down and dragged, not just moving
+    isDown = true;
+    changeSpeedBar(event);
+  }
+
+  const letGo = (event) => {
+    isDown = false;
+  }
+
+  const drag = (event) => {
+    if (isDown) {
+      changeSpeedBar(event);
+    }
+  }
+
+  speed.addEventListener('mousedown', grab);
+  speed.addEventListener('mouseup', letGo);
+  speed.addEventListener('mousemove', drag);
 
 </script>
 </body>
